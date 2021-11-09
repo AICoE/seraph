@@ -1,3 +1,18 @@
+# seraph
+A seraph (/ˈsɛrəf/) is a type of celestial or heavenly being.
+The name "Seraphim" does not come from charity only, but from the excess of charity, expressed by the word ardor or FIRE.
+
+Fire
+ - the movement which is upwards and continuous
+ - the active force which is heat; exists with a certain sharpness, as being of most penetrating action, and reaching even to the smallest things
+ - the quality of clarity, or brightness; having an inextinguishable light, and also perfectly enlighten others
+
+References:
+- In Doom (2016 video game), it is mentioned that a Seraph blesses the Doom Slayer with great strength and speed. In Doom Eternal, it is confirmed that the character Samuel Hayden is in fact the Seraphim who blessed the Doom Slayer.
+- Seraph is a supporting character in the second and third films of The Matrix Trilogy. Seraph is an exile program who is seen acting as a "guardian angel" of the Oracle, and is described as the personification of a sophisticated challenge-handshake authentication protocol which guards the Oracle.
+- Rolls-Royce Silver Seraph (1998 -2002); Several Rolls-Royce models use a "Flying Lady" symbol or moniker, which some equate to a seraph.
+
+
 # Operate First template for repositories
 
 Derive new repositories from this template
