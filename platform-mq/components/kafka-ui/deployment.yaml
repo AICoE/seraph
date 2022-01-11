@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+        - name: kafka-ui
+          image: "docker.io/provectuslabs/kafka-ui:latest"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: kafka
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: kafka-kafka-bootstrap:9092
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
