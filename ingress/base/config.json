@@ -1,0 +1,45 @@
+{
+    "kafka": {
+        "brokers": [
+            {
+                "hostname": "kafka-kafka-bootstrap.seraph-platform-mq.svc",
+                "port": 9092
+            }
+        ],
+        "topics": [
+            {
+                "name": "platform.upload.advisor",
+                "requestedName": "platform.upload.advisor"
+            },
+            {
+                "name": "platform.payload-status",
+                "requestedName": "platform.payload-status"
+            }
+        ]
+    },
+    "logging": {
+        "cloudwatch": {
+            "accessKeyId": "",
+            "logGroup": "",
+            "region": "",
+            "secretAccessKey": ""
+        },
+        "type": "null"
+    },
+    "publicPort": 3000,
+    "metricsPath": "/metrics",
+    "metricsPort": 8080,
+    "objectStore": {
+        "buckets": [
+            {
+                "name": "seraph-upload-perma",
+                "requestedName": "seraph-upload-perma",
+                "accessKey": "",
+                "secretKey": ""
+            }
+        ],
+        "hostname": "s3.openshift-storage.svc",
+        "port": 80,
+        "tls": false
+    }
+}

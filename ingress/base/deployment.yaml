@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress
+  labels:
+    app: ingress
+spec:
+  selector:
+    matchLabels:
+      app: ingress
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ingress
+    spec:
+      initContainers:
+        - name: setup-config
+          image: quay.io/operate-first/opf-toolbox:latest
+          command: ["/bin/bash", "-c", "--"]
+          args:
+            - |
+              yq e ".objectStore.buckets[0].accessKey = strenv(AWS_ACCESS_KEY_ID) | .objectStore.buckets[0].secretKey= strenv(AWS_SECRET_ACCESS_KEY)" /mnt/source/config.json > /mnt/dest/config.json
+          volumeMounts:
+            - mountPath: /mnt/source
+              name: config-origin
+            - mountPath: /mnt/dest
+              name: config
+          envFrom:
+            - secretRef:
+                name: seraph-upload-perma
+
+      containers:
+        - name: ingress
+          image: quay.io/cloudservices/insights-ingress:latest
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /metrics
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 35
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 120
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /metrics
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 35
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 120
+          ports:
+            - containerPort: 3000
+            - containerPort: 8080
+          env:
+            - name: INGRESS_PAYLOADTRACKERURL
+              value: payload-tracker
+            - name: INGRESS_STAGEBUCKET
+              value: seraph-upload-perma
+            - name: INGRESS_LOG_LEVEL
+              value: INFO
+            - name: INGRESS_VALIDTOPICS
+              value: advisor
+            - name: INGRESS_MAXSIZEMAP
+              value: '{"qpc": "157286400"}'
+            - name: ACG_CONFIG
+              value: /mnt/config/config.json
+            - name: CLOWDER_ENABLED
+              value: "true"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmpdir
+            - mountPath: /mnt/config
+              name: config
+
+      volumes:
+        - emptyDir: {}
+          name: tmpdir
+        - secret:
+            secretName: ingress-config
+          name: config-origin
+        - emptyDir: {}
+          name: config
