@@ -1,0 +1,7 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: seraph-upload-perma
+spec:
+  bucketName: seraph-upload-perma
+  storageClassName: openshift-storage.noobaa.io
