@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: puptoo
+  labels:
+    app: puptoo
+spec:
+  selector:
+    matchLabels:
+      app: puptoo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: puptoo
+    spec:
+      containers:
+        - name: insights-puptoo
+          image: quay.io/cloudservices/insights-puptoo:latest
+          env:
+            - name: LOG_LEVEL
+              value: INFO
+            - name: CLOWDER_ENABLED
+              value: "True"
+            - name: ACG_CONFIG
+              value: /mnt/config/config.json
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /mnt/config
+              name: config
+
+      volumes:
+        - emptyDir: {}
+          name: tmpdir
+        - secret:
+            secretName: puptoo-config
+          name: config

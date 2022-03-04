@@ -1,0 +1,39 @@
+{
+    "webPort": 8000,
+    "metricsPort": 9000,
+    "metricsPath": "/metrics",
+    "kafka": {
+        "brokers": [
+            {
+                "hostname": "kafka-kafka-bootstrap.seraph-platform-mq.svc",
+                "port": 9092
+            }
+        ],
+        "topics": [
+            {
+                "requestedName": "platform.upload.advisor",
+                "name": "platform.upload.advisor"
+            },
+            {
+                "requestedName": "platform.upload.compliance",
+                "name": "platform.upload.compliance"
+            },
+            {
+                "requestedName": "platform.inventory.host-ingress",
+                "name": "platform.inventory.host-ingress"
+            },
+            {
+                "requestedName": "platform.upload.validation",
+                "name": "platform.upload.validation"
+            },
+            {
+                "requestedName": "platform.payload-status",
+                "name": "platform.payload-status"
+            },
+            {
+                "requestedName": "platform.logging.logs",
+                "name": "platform.logging.logs"
+            }
+        ]
+    }
+}
