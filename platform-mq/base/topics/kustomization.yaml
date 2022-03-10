@@ -3,8 +3,11 @@ kind: Kustomization
 commonLabels:
   strimzi.io/cluster: kafka
 resources:
+- platform.inventory.events.yaml
+- platform.notifications.ingress.yaml
 - platform.payload-status.yaml
 - platform.upload.advisor.yaml
 - platform.upload.announce.yaml
 - platform.upload.available.yaml
 - platform.upload.host-ingress.yaml
+- platform.upload.validation.yaml

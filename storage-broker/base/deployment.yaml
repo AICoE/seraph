@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-broker
+  labels:
+    app: storage-broker
+spec:
+  selector:
+    matchLabels:
+      app: storage-broker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: storage-broker
+    spec:
+      containers:
+        - name: storage-broker
+          image: https://quay.io/cloudservices/insights-storage-broker:latest
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /metrics
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            volumes:
+            - configMap:
+                defaultMod: 420
+                name: storage-broker-map
+              name: storage-broker-map
+          env:
+            - name: CLOWDER_ENABLED
+              value: "true"
+            - name: LOG_LEVEL
+              value: INFO
+            - name: REJECT_BUCKET
+              value: "seraph-upload-rejected"
+            - name: PERM_BUCKET
+              value: "seraph-upload-perma"
+            - name: ACG_CONFIG
+              value: /mnt/config/config.json
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_REGION
+              value: TBD
+            - name: S3_ENDPOINT_URL
+              value: TBD
+            - name: HOSTNAME
+              value: "s3.openshift-storage.svc"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmpdir
+            - mountPath: /mnt/config
+              name: config
+
+      volumes:
+        - emptyDir: {}
+          name: tmpdir
+        - emptyDir: {}
+          name: config

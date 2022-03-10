@@ -1,0 +1,47 @@
+{
+    "kafka": {
+        "brokers": [
+            {
+                "hostname": "kafka-kafka-bootstrap.seraph-platform-mq.svc",
+                "port": 9092
+            }
+        ],
+        "topics": [
+            {
+                "name": "platform.upload.validation",
+                "requestedName": "platform.upload.validation"
+            },
+            {
+                "name": "platform.upload.available",
+                "requestedName": "platform.upload.available"
+            },
+            {
+                "name": "platform.inventory.events",
+                "requestedName": "platform.inventory.events"
+            },
+            {
+                "name": "platform.payload-status",
+                "requestedName": "platform.payload-status"
+            },
+            {
+                "name": "platform.notifications.ingress",
+                "requestedName": "platform.notifications.ingress"
+            }
+        ]
+    },
+    "publicPort": 3000,
+    "metricsPath": "/metrics",
+    "metricsPort": 8080,
+    "objectStore": {
+        "buckets": [
+            {
+                "name": "seraph-upload-perma",
+                "requestedName": "seraph-upload-perma"
+            },
+            {
+                "name": "seraph-upload-rejected",
+                "requestedName": "seraph-upload-rejected"
+            }
+        ]
+    }
+}
