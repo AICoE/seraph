@@ -8,3 +8,4 @@ resources:
 - platform.upload.announce.yaml
 - platform.upload.available.yaml
 - platform.upload.host-ingress.yaml
+- platform.upload.validation.yaml
