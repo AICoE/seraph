@@ -1,16 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: seraph-host-inventory
-configMapGenerator:
-- name: common-envs
-  envs:
-  - commons.env
 resources:
   - operatorgroup.yaml
   - sub.yaml
   - postgre.yaml
-  - web-server.yaml
-  - service.yaml
-  - mq-p1.yaml
-  - mq-pmin.yaml
-  - mq-sp.yaml
