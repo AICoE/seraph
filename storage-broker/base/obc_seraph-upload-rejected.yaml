@@ -1,0 +1,7 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: seraph-upload-rejected
+spec:
+  bucketName: seraph-upload-rejected
+  storageClassName: openshift-storage.noobaa.io
