@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-web-server
+  labels:
+    app: inventory-web-server
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: inventory-web-server
+  template:
+    metadata:
+      labels:
+        app: inventory-web-server
+    spec:
+      containers:
+      - name: inventory-web-server
+        image: quay.io/cloudservices/insights-inventory:latest
+        command: ["/bin/sh", "-c", "--"]
+        args:
+          - |
+           gunicron --workers=4 --threads=8 --worker-tmp-dir=/gunicorn -c gunicorn.conf.py -b 0.0.0.0:8000 -t '60' run
+        env:
+        - name: APP_NAME
+          value: inventory
+        - name: PATH_PREFIX
+          value: api
+        - name: INVENTORY_LEGACY_API_URL
+          value: /r/insights/platform/inventory/v1/
+        - name: prometheus_multiproc_dir
+          value: /tmp/inventory/prometheus
+        - name: INVENTORY_LOG_LEVEL
+          value: INFO
+        - name: URLLIB3_LOG_LEVEL
+          value: WARNING
+        - name: INVENTORY_DB_SSL_MODE
+          value: prefer
+        - name: PAYLOAD_TRACKER_SERVICE_NAME
+          value: inventory
+        - name: PAYLOAD_TRACKER_ENABLED
+          value: 'true'
+        - name: XJOIN_GRAPHQL_URL
+          value: http://localhost:4000/graphql
+        - name: BULK_QUERY_SOURCE
+          value: db
+        - name: BULK_QUERY_SOURCE_BETA
+          value: db
+        - name: BYPASS_RBAC
+          value: 'false'
+        - name: KAFKA_PRODUCER_ACKS
+          value: '1'
+        - name: KAFKA_PRODUCER_RETRIES
+          value: '0'
+        - name: KAFKA_PRODUCER_RETRY_BACKOFF_MS
+          value: platform.inventory.host-ingress-p1
+        - name: KAFKA_SECURITY_PROTOCOL
+          value: PLAINTEXT
+        - name: KAFKA_SASL_MECHANISM
+          value: 'PLAIN'
+        - name: CLOWDER_ENABLED
+          value: "true"
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 8000
+            scheme: HTTP
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 60
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 8000
+            scheme: HTTP
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 60
+        volumeMounts:
+        - mountPath: /tmp/inventory/prometheus
+          name: prometheus-volume
+        - mountPath: /gunicorn
+          name: gunicorn-worker-dir
+      volumes:
+      - emptyDir: {}
+        name: prometheus-volume
+      - emptyDir:
+        medium: Memory
+        name: gunicorn-worker-dir
